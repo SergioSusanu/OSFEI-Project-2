@@ -1,5 +1,5 @@
 
-var score = 0;
+var score = 0; playOn=true; helpOn=false;
 const won="USER WINS"; lost = "COMP WINS"; draw = "DRAW";
 
 //Handlers for html elements
@@ -9,37 +9,58 @@ const resultInfoButton = document.getElementById("result-info-button");
 const imgCompMove = document.getElementById("img-comp-move");
 const imgPlayerMove = document.getElementById("img-player-move");
 
-
 //Event listeners
-document.getElementById("paper-card").addEventListener("click", card1Click);
-document.getElementById("rock-card").addEventListener("click",card2Click);
-document.getElementById("scissors-card").addEventListener("click",card3Click);
+document.getElementById("paper-card").addEventListener("click", () => play(1));
+document.getElementById("rock-card").addEventListener("click",() => play(2));
+document.getElementById("scissors-card").addEventListener("click",() => play(3));
 document.getElementById("play-again").addEventListener("click", playAgainClick);
+document.getElementById("btn-start-game").addEventListener("click", (e) => {
+    const btn = e.target;
+    btn.innerHTML = "Loading."
+    myInterval = setInterval(()=>{
+        btn.innerHTML = btn.innerHTML + '.';
+    }, 250);
 
-function card1Click() { play(1);}
+    setTimeout(()=>{
+        clearInterval(myInterval);
+        document.getElementById('loader').style.display = 'none';
+        document.getElementById('game-content').style.display = 'block';
 
-function card2Click() { play(2);}
+    },1500)
+});
 
-function card3Click() { play(3);}
+document.getElementById("help-button").addEventListener("click", () => {
+    const helpCard = document.getElementById("info-card");
+    (helpOn) ? helpCard.style.display = 'none' : helpCard.style.display = 'grid';
+    helpOn = !helpOn;
+});
 
-function playAgainClick(){ controlPanel.style.display = none;}
+function playAgainClick() { 
+    controlPanel.style.display = 'none';
+    playOn = true;
+}
 
 // 1 is paper 
 // 2 is rock 
 // 3 is scissors
 function play(playerMove){
+    if (!playOn){
+        alert('Hit Play again to launch a new game')
+        return
+    }
     let result;
     const compMove =  Math.floor(Math.random() * (3)) + 1;
     if (playerMove == compMove) result = draw;
     else if (playerMove == 1) 
         {compMove == 2 ? result = won : result = lost }
     else if (playerMove == 2)
-        {compMove == 1 ? result = lost : result = win}
+        {compMove == 1 ? result = lost : result = won}
     else if (playerMove == 3)
-        {compMove == 1 ? result = win : result = lost}
+        {compMove == 1 ? result = won : result = lost}
 
     if (result == won) increaseScore();
     displayResults(playerMove, compMove, result);
+    playOn = false;
 }
 
 function increaseScore(){

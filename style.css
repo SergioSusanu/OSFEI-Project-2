@@ -1,3 +1,6 @@
+html, body{
+    height: 100%;
+}
 body{
     background-color: rgb(71, 71, 211);
     color: white;
@@ -5,6 +8,21 @@ body{
     padding: 0;
     font-size: 20px;
     font-weight: bold;
+}
+
+div#loader{
+    display: flex;
+    /* display: none; */
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
+
+#game-content {
+    display: none;
+    position: relative;
+    height: 100%;
 }
 
 header{
@@ -23,9 +41,11 @@ header{
     padding: 10px 30px;
 }
 
+
+
 h1{
     text-align: center;
-    margin: 40px auto;
+    margin: 10px auto;
 }
 
 .cards-container{
@@ -33,13 +53,17 @@ h1{
     justify-content: center;
     align-items: center;
     gap: 10px;
-    height: 400px;
+    height: 250px;
     
 }
 
 .card img{
-    width: 200px;
-    height: 200px;
+    width: 150px;
+    height: 150px;
+}
+
+.card img:hover{
+    border:1px solid black;
 }
 
 .card.one, .card.three{
@@ -53,8 +77,8 @@ h1{
 #control-panel{
     display: none;
     width: 300px;
-    margin: 40px  auto;
-   height: 500px;
+    margin: 20px  auto;
+   height: 300px;
    text-align: center;
     
 }
@@ -89,3 +113,25 @@ h1{
     width: 50px;
 }
 
+.help{
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+}
+
+#info-card{
+    display: grid;
+    width:150px;
+    grid-template-columns: auto auto auto;
+    align-items: center;
+    border: 2px solid white;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    padding: 12px;
+    display: none;
+}
+
+#info-card img{
+    width: 50px;
+    height: 50px;
+}
