@@ -1,82 +1,83 @@
+//variables
+var score = 0;
+var playOn = true;
+const images = ["paper", "rock", "scissors"];
+const outcomes = { won: "USER WINS", lost: "COMP WINS", draw: "DRAW" };
 
-var score = 0; playOn=true; helpOn=false;
-const won="USER WINS"; lost = "COMP WINS"; draw = "DRAW";
-
-//Handlers for html elements
-const scoreBoard =  document.getElementById("player-score");
+//Handlers for HTML elements
+const scoreBoard = document.getElementById("player-score");
 const controlPanel = document.getElementById("control-panel");
 const resultInfoButton = document.getElementById("result-info-button");
 const imgCompMove = document.getElementById("img-comp-move");
 const imgPlayerMove = document.getElementById("img-player-move");
+const helpCard = document.getElementById("info-card");
 
 //Event listeners
 document.getElementById("paper-card").addEventListener("click", () => play(1));
-document.getElementById("rock-card").addEventListener("click",() => play(2));
-document.getElementById("scissors-card").addEventListener("click",() => play(3));
+document.getElementById("rock-card").addEventListener("click", () => play(2));
+document
+  .getElementById("scissors-card")
+  .addEventListener("click", () => play(3));
 document.getElementById("play-again").addEventListener("click", playAgainClick);
 document.getElementById("btn-start-game").addEventListener("click", (e) => {
-    const btn = e.target;
-    btn.innerHTML = "Loading."
-    myInterval = setInterval(()=>{
-        btn.innerHTML = btn.innerHTML + '.';
-    }, 250);
-
-    setTimeout(()=>{
-        clearInterval(myInterval);
-        document.getElementById('loader').style.display = 'none';
-        document.getElementById('game-content').style.display = 'block';
-
-    },1500)
+  const btn = e.target;
+  btn.innerHTML = "Loading.";
+  myInterval = setInterval(() => {
+    btn.innerHTML += ".";
+  }, 250);
+  setTimeout(() => {
+    clearInterval(myInterval);
+    document.getElementById("loader").style.display = "none";
+    document.getElementById("game-content").style.display = "block";
+  }, 1500);
 });
 
 document.getElementById("help-button").addEventListener("click", () => {
-    const helpCard = document.getElementById("info-card");
-    (helpOn) ? helpCard.style.display = 'none' : helpCard.style.display = 'grid';
-    helpOn = !helpOn;
+  helpCard.classList.toggle("hidden");
 });
 
-function playAgainClick() { 
-    controlPanel.style.display = 'none';
-    playOn = true;
+//Play logic: 1 is paper, 2 is rock, 3 is scissors
+function playAgainClick() {
+  controlPanel.style.display = "none";
+  playOn = true;
 }
 
-// 1 is paper 
-// 2 is rock 
-// 3 is scissors
-function play(playerMove){
-    if (!playOn){
-        alert('Hit Play again to launch a new game')
-        return
-    }
-    let result;
-    const compMove =  Math.floor(Math.random() * (3)) + 1;
-    if (playerMove == compMove) result = draw;
-    else if (playerMove == 1) 
-        {compMove == 2 ? result = won : result = lost }
-    else if (playerMove == 2)
-        {compMove == 1 ? result = lost : result = won}
-    else if (playerMove == 3)
-        {compMove == 1 ? result = won : result = lost}
+function play(playerMove) {
+  if (!playOn) {
+    alert("Hit Play again to launch a new game");
+    return;
+  }
+  const compMove = Math.floor(Math.random() * 3) + 1;
 
-    if (result == won) increaseScore();
-    displayResults(playerMove, compMove, result);
-    playOn = false;
+  const result = figureOutWinner(playerMove, compMove);
+
+  if (result == outcomes.won) increaseScore();
+  displayResults(playerMove, compMove, result);
+  playOn = false;
 }
 
-function increaseScore(){
-    scoreBoard.innerHTML = ++score;
+function figureOutWinner(playerMove, compMove) {
+  if (playerMove == compMove) return outcomes.draw;
+  else if (
+    (playerMove == 1 && compMove == 2) ||
+    (playerMove == 2 && compMove == 3) ||
+    (playerMove == 3 && compMove == 1)
+  )
+    return outcomes.won;
+  return outcomes.lost;
 }
 
-function fetchImage(n){
-    let source = "images/paper.png";
-    if (n==2) source =  "images/rock.png";
-    else if (n==3) source = "images/scissors.png";
-    return source;
+function increaseScore() {
+  scoreBoard.innerHTML = ++score;
 }
 
-function displayResults(pMove, cMove, res){
- controlPanel.style.display = "block";
- resultInfoButton.innerHTML = res;
- imgCompMove.src = fetchImage(cMove);
- imgPlayerMove.src = fetchImage(pMove);
+function displayResults(pMove, cMove, result) {
+  controlPanel.style.display = "block";
+  resultInfoButton.innerHTML = result;
+  imgCompMove.src = fetchImage(cMove);
+  imgPlayerMove.src = fetchImage(pMove);
+}
+
+function fetchImage(n) {
+  return `images/${images[n - 1]}.png`;
 }
